@@ -1,4 +1,5 @@
 import numpy as np
+import transformers
 
 
 # A 3D vector — a point in space
@@ -17,3 +18,28 @@ def cosine_sim(a,b):
 print(cosine_sim(v1,v2))
 print(cosine_sim(np.array([1,0,0]), np.array([0,1,0]))) #this is perpendicular
 print(cosine_sim(np.array([1,0,0]), np.array([-1,0,0])))
+
+
+
+
+
+
+
+from sentence_transformers import SentenceTransformer
+import numpy as np
+
+model=SentenceTransformer('all-MiniLM-L6-v2')
+
+sentences = [
+    "This is an example sentence",
+    "Each sentence is converted into a vector",
+    "The quick brown fox jumps over the lazy dog"
+]
+emb=model.encode(sentences)
+print("Embedding shape:", emb.shape)
+#the shape of the embedding is (3, 384) because we have 3 sentences and each sentence is represented by a 384-dimensional vector.
+
+for i in range(len(sentences)):
+    for j in range(i+1, len(sentences)):
+        s = cosine_sim(emb[i], emb[j])
+        print(f"{s:.3f} | {sentences[i][:35]:35} vs {sentences[j][:35]}")
